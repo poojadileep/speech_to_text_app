@@ -28,8 +28,7 @@ def main():
         "👾 Free mode (2MB per API call)": demo,
         "🤗 Full mode": API_key,
     }
-
-    if "page" not in st.session_state:
+    if "page" not in st.session_state: 
         st.session_state.update(
             {
                 # Default page
