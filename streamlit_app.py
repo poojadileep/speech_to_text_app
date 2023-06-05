@@ -39,7 +39,6 @@ with c30:
     st.header("")
 
 with c32:
-
     st.title("")
     st.title("")
     st.caption("")
@@ -56,8 +55,8 @@ with c32:
 st.text("")
 st.markdown(
     f"""
-                    The speech to text recognition is done via the [Facebook's Wav2Vec2 model.](https://huggingface.co/facebook/wav2vec2-large-960h)
-                    """
+    The speech to text recognition is done via the [Facebook's Wav2Vec2 model.](https://huggingface.co/facebook/wav2vec2-large-960h)
+    """
 )
 st.text("")
 
@@ -97,59 +96,54 @@ def demo():
     with c2:
 
         with st.form(key="my_form"):
-		#
-		
-	        start_button = st.button("Start Recording")
+            start_button = st.button("Start Recording")
 
-               # Add a stop button for stopping the recording
-                stop_button = st.button("Stop Recording")
+            # Add a stop button for stopping the recording
+            stop_button = st.button("Stop Recording")
 
             # Add a filename input field
-                filename = st.text_input("Enter a filename (without extension)")
+            filename = st.text_input("Enter a filename (without extension)")
 
             # Add a variable to store the recording state
-                recording = False
+            recording = False
 
             # Define the callback function for recording audio
-                def callback(indata, frames, time, status):
+            def callback(indata, frames, time, status):
                 if recording:
                     audio_buffer.append(indata.copy())
 
-                if start_button:
-			#
+            if start_button:
                 # Start recording
-                        audio_buffer = []
-                        recording = True
-                        st.info("Recording started...")
+                audio_buffer = []
+                recording = True
+                st.info("Recording started...")
 
-                if stop_button:
-			#
+            if stop_button:
                 # Stop recording
-                        recording = False
-                        st.info("Recording stopped...")
+                recording = False
+                st.info("Recording stopped...")
 
-                # Save the recorded audio to a file
-                if filename:
-                    filename = f"{filename}.wav"
-                    data = np.concatenate(audio_buffer, axis=0)
-                    sf.write(filename, data, samplerate=44100)
-                    st.success(f"Recording saved as {filename}")
-                else:
-                    st.warning("Please enter a filename.")
+            # Save the recorded audio to a file
+            if filename:
+                filename = f"{filename}.wav"
+                data = np.concatenate(audio_buffer, axis=0)
+                sf.write(filename, data, samplerate=44100)
+                st.success(f"Recording saved as {filename}")
+            else:
+                st.warning("Please enter a filename.")
 
             submit_button = st.form_submit_button(label="Transcribe")
- 	
+
             f = st.file_uploader("", type=[".wav"])
 
             st.info(
                 f"""
-                        👆 Upload a .wav file. Or try a sample: [Wav sample 01](https://github.com/CharlyWargnier/CSVHub/blob/main/Wave_files_demos/Welcome.wav?raw=true) | [Wav sample 02](https://github.com/CharlyWargnier/CSVHub/blob/main/Wave_files_demos/The_National_Park.wav?raw=true)
-                        """
+                👆 Upload a .wav file. Or try a sample: [Wav sample 01](https://github.com/CharlyWargnier/CSVHub/blob/main/Wave_files_demos/Welcome.wav?raw=true) | [Wav sample 02](https://github.com/CharlyWargnier/CSVHub/blob/main/Wave_files_demos/The_National_Park.wav?raw=true)
+                """
             )
 
             submit_button = st.form_submit_button(label="Transcribe")
-		
-	    
+
 
     if f is not None:
         path_in = f.name
