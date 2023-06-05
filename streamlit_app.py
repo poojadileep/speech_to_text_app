@@ -97,7 +97,7 @@ def demo():
     with c2:
 
         with st.form(key="my_form"):
-		start_button = st.button("Start Recording")
+	    start_button = st.button("Start Recording")
 
                # Add a stop button for stopping the recording
             stop_button = st.button("Stop Recording")
