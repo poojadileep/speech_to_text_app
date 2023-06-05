@@ -2,11 +2,8 @@ import streamlit as st
 import requests
 import json
 import os
-
-
-import time
-
-DURATION = 5
+import sounddevice as sd
+import soundfile as sf
 
 # title and favicon ------------------------------------------------------------
 
@@ -100,7 +97,44 @@ def demo():
     with c2:
 
         with st.form(key="my_form"):
+	    start_button = st.button("Start Recording")
 
+            # Add a stop button for stopping the recording
+            stop_button = st.button("Stop Recording")
+
+            # Add a filename input field
+            filename = st.text_input("Enter a filename (without extension)")
+
+            # Add a variable to store the recording state
+            recording = False
+
+            # Define the callback function for recording audio
+            def callback(indata, frames, time, status):
+                if recording:
+                    audio_buffer.append(indata.copy())
+
+            if start_button:
+                # Start recording
+                audio_buffer = []
+                recording = True
+                st.info("Recording started...")
+
+            if stop_button:
+                # Stop recording
+                recording = False
+                st.info("Recording stopped...")
+
+                # Save the recorded audio to a file
+                if filename:
+                    filename = f"{filename}.wav"
+                    data = np.concatenate(audio_buffer, axis=0)
+                    sf.write(filename, data, samplerate=44100)
+                    st.success(f"Recording saved as {filename}")
+                else:
+                    st.warning("Please enter a filename.")
+
+            submit_button = st.form_submit_button(label="Transcribe")
+ 	
             f = st.file_uploader("", type=[".wav"])
 
             st.info(
@@ -110,27 +144,7 @@ def demo():
             )
 
             submit_button = st.form_submit_button(label="Transcribe")
-        def record_audio(duration):
-            fs = 44100  # Sample rate
-            recording = sd.rec(int(duration * fs), samplerate=fs, channels=1)
-            sd.wait()  # Wait until recording is finished
-            return recording.flatten()
 
-      
-def main():
-    st.title("Microphone Recording and Speech-to-Text Transcription")
-
-    duration = st.slider("Recording Duration (seconds)", min_value=1, max_value=10, value=5, step=1)
-
-    if st.button("Start Recording"):
-        st.text("Recording in progress...")
-        recording = record_audio(duration)
-        st.text("Recording finished!")
-
-        text = transcribe_audio(recording)
-        st.text("Transcription:")
-        st.text(text)
-	
     if f is not None:
         path_in = f.name
         # Get file size from buffer
@@ -148,7 +162,7 @@ def main():
             # Load your API key from an environment variable or secret management service
             api_token = st.secrets["api_token"]
 
-            
+            # endregion API key
             headers = {"Authorization": f"Bearer {api_token}"}
             API_URL = "https://api-inference.huggingface.co/models/facebook/wav2vec2-base-960h"
 
@@ -204,8 +218,6 @@ def API_key():
             text_input = st.text_input("Enter your HuggingFace API key")
 
             f = st.file_uploader("", type=[".wav"])
-
-
 
             st.info(
                 f"""
@@ -276,7 +288,6 @@ def API_key():
                             args=None,
                             kwargs=None,
                         )
-            
 
                 else:
                     st.error(
