@@ -116,19 +116,21 @@ def demo():
             sd.wait()  # Wait until recording is finished
             return recording.flatten()
 
-        def main():
-            st.title("Microphone Recording")
+      
+def main():
+    st.title("Microphone Recording and Speech-to-Text Transcription")
 
-            duration = st.slider("Recording Duration (seconds)", min_value=1, max_value=10, value=5, step=1)
+    duration = st.slider("Recording Duration (seconds)", min_value=1, max_value=10, value=5, step=1)
 
-            if st.button("Start Recording"):
-             
-             st.text("Recording in progress...")
-             recording = record_audio(duration)
-             st.text("Recording finished!")
+    if st.button("Start Recording"):
+        st.text("Recording in progress...")
+        recording = record_audio(duration)
+        st.text("Recording finished!")
 
-             st.audio(recording, format='wav')
-
+        text = transcribe_audio(recording)
+        st.text("Transcription:")
+        st.text(text)
+	
     if f is not None:
         path_in = f.name
         # Get file size from buffer
