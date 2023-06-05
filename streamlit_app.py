@@ -97,32 +97,36 @@ def demo():
     with c2:
 
         with st.form(key="my_form"):
-	    start_button = st.button("Start Recording")
+		#
+		
+	        start_button = st.button("Start Recording")
 
                # Add a stop button for stopping the recording
-            stop_button = st.button("Stop Recording")
+                stop_button = st.button("Stop Recording")
 
             # Add a filename input field
-            filename = st.text_input("Enter a filename (without extension)")
+                filename = st.text_input("Enter a filename (without extension)")
 
             # Add a variable to store the recording state
-            recording = False
+                recording = False
 
             # Define the callback function for recording audio
-            def callback(indata, frames, time, status):
+                def callback(indata, frames, time, status):
                 if recording:
                     audio_buffer.append(indata.copy())
 
-            if start_button:
+                if start_button:
+			#
                 # Start recording
-                audio_buffer = []
-                recording = True
-                st.info("Recording started...")
+                        audio_buffer = []
+                        recording = True
+                        st.info("Recording started...")
 
-            if stop_button:
+                if stop_button:
+			#
                 # Stop recording
-                recording = False
-                st.info("Recording stopped...")
+                        recording = False
+                        st.info("Recording stopped...")
 
                 # Save the recorded audio to a file
                 if filename:
